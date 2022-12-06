@@ -7,7 +7,7 @@ import { TodosModule } from './todos/todos.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: 'mysql',
+      type: 'postgres',
       host: 'containers-us-west-118.railway.app',
       port: 6856,
       username: 'postgres',
