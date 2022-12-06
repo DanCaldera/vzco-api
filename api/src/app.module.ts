@@ -11,7 +11,7 @@ import { TodosModule } from './todos/todos.module';
       host: 'containers-us-west-154.railway.app',
       port: 6471,
       username: 'root',
-      password: 'gd8hnrHzmzbm7v3TNl2d',
+      password: 'password',
       database: 'railway',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
