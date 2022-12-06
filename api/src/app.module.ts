@@ -8,11 +8,11 @@ import { TodosModule } from './todos/todos.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'example',
-      database: 'todos',
+      host: 'containers-us-west-118.railway.app',
+      port: 6856,
+      username: 'postgres',
+      password: 'EmpDYCn2fUPXSiAnWATT',
+      database: 'railway',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
