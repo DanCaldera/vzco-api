@@ -7,11 +7,11 @@ import { TodosModule } from './todos/todos.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'containers-us-west-118.railway.app',
-      port: 6856,
-      username: 'postgres',
-      password: 'EmpDYCn2fUPXSiAnWATT',
+      type: 'mysql',
+      host: 'containers-us-west-154.railway.app',
+      port: 6471,
+      username: 'root',
+      password: 'gd8hnrHzmzbm7v3TNl2d',
       database: 'railway',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
