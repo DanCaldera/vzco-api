@@ -34,6 +34,12 @@ export class Todo {
   })
   status: TodoStatusEnum;
 
+  @Column({
+    type: 'date',
+    nullable: true,
+  })
+  dueDate: Date;
+
   @ManyToOne(() => User, (user) => user.todos, {
     nullable: false,
   })
