@@ -19,6 +19,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { filter } from 'rxjs';
 import { AuthGuardJwt } from 'src/auth/auth-guard.jwt';
 import { CurrentUser } from 'src/auth/current-user.decorator';
 import { User } from 'src/auth/entities/user.entity';
@@ -67,6 +68,23 @@ export class TodosController {
     if (!todo) throw new NotFoundException();
 
     return todo;
+  }
+
+  @Get('user/:id')
+  @UseInterceptors(ClassSerializerInterceptor)
+  async findUserTodos(
+    @Param('id', ParseIntPipe) id: number,
+    @Query() { page = 1 },
+  ) {
+    const todos = await this.todosService.getTodosByUserIdPaginated(id, {
+      currentPage: page,
+      total: true,
+      limit: 10,
+    });
+
+    if (!todos) throw new NotFoundException();
+
+    return todos;
   }
 
   @Patch(':id')

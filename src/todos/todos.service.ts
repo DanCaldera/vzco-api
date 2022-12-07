@@ -124,4 +124,17 @@ export class TodosService {
       .where('id = :id', { id })
       .execute();
   }
+
+  public async getTodosByUserIdPaginated(
+    userId: number,
+    paginateOptions?: PaginationOptions,
+  ) {
+    return await paginate(
+      this.todosRepository
+        .createQueryBuilder('t')
+        .where('t.userId = :userId', { userId })
+        .orderBy('t.id', 'DESC'),
+      paginateOptions,
+    );
+  }
 }
