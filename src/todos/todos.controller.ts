@@ -96,8 +96,18 @@ export class TodosController {
     @Param('id', ParseIntPipe) id: number,
     @CurrentUser() user: User,
   ) {
-    const result = await this.todosService.deleteTodoById(id);
+    const todo = await this.repository.findOne({
+      where: {
+        id,
+      },
+    });
 
-    if (!result.affected) throw new NotFoundException();
+    if (!todo) throw new NotFoundException();
+
+    if (todo.userId !== user.id) {
+      throw new ForbiddenException(null, 'You are not the owner of this todo');
+    }
+
+    await this.todosService.deleteTodoById(id);
   }
 }
