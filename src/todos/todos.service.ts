@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { paginate, PaginationOptions } from 'src/pagination/paginator';
 import { Repository } from 'typeorm';
 import { dueDateFilterEnum, ListTodosDto } from './dto/list.todos.dto';
 import { Todo } from './entities/todo.entity';
@@ -17,7 +18,7 @@ export class TodosService {
     return this.todosRepository.createQueryBuilder('t').orderBy('t.id', 'DESC');
   }
 
-  public getTodosFiltered(filter?: ListTodosDto) {
+  private getTodosFiltered(filter?: ListTodosDto) {
     const query = this.getTodosBaseQuery();
 
     if (filter?.dueDate) {
@@ -45,6 +46,22 @@ export class TodosService {
         query.andWhere('t.dueDate >= :dueDate', {
           dueDate: thisMonth.toISOString().split('T')[0],
         });
+      } else if (filter.dueDate === dueDateFilterEnum.NEXT_MONTH) {
+        const today = new Date();
+        const nextMonth = new Date(
+          today.getFullYear(),
+          today.getMonth() + 1,
+          1,
+        );
+        query.andWhere('t.dueDate >= :dueDate', {
+          dueDate: nextMonth.toISOString().split('T')[0],
+        });
+      } else if (filter.dueDate === dueDateFilterEnum.THIS_YEAR) {
+        const today = new Date();
+        const thisYear = new Date(today.getFullYear(), 0, 1);
+        query.andWhere('t.dueDate >= :dueDate', {
+          dueDate: thisYear.toISOString().split('T')[0],
+        });
       } else if (filter.dueDate === dueDateFilterEnum.OVERDUE) {
         query.andWhere('t.dueDate < :dueDate', {
           dueDate: new Date().toISOString().split('T')[0],
@@ -52,7 +69,14 @@ export class TodosService {
       }
     }
 
-    return query.getMany();
+    return query;
+  }
+
+  public async getTodosFilteredPaginated(
+    filter?: ListTodosDto,
+    paginateOptions?: PaginationOptions,
+  ) {
+    return await paginate(this.getTodosFiltered(filter), paginateOptions);
   }
 
   public async getTodo(id: number): Promise<Todo | undefined> {

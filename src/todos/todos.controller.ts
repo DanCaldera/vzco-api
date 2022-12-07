@@ -10,6 +10,8 @@ import {
   Patch,
   Post,
   Query,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -35,12 +37,16 @@ export class TodosController {
   }
 
   @Get()
+  @UsePipes(new ValidationPipe({ transform: true }))
   async findAll(@Query() filter: ListTodosDto) {
     console.log('filter', filter);
 
     this.logger.log('Hit the findAll endpoint');
-    const todos = await this.todosService.getTodosFiltered(filter);
-    this.logger.debug(`Found ${todos.length} todos`);
+    const todos = await this.todosService.getTodosFilteredPaginated(filter, {
+      currentPage: filter.page,
+      total: true,
+      limit: 10,
+    });
     return todos;
   }
 
