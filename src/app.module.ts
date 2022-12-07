@@ -16,7 +16,7 @@ import { TodosModule } from './todos/todos.module';
     }),
     TypeOrmModule.forRootAsync({
       useFactory:
-        process.env.NODE_ENV === 'production' ? ormConfig : ormConfigProd,
+        process.env.NODE_ENV !== 'production' ? ormConfig : ormConfigProd,
     }),
     TodosModule,
   ],
