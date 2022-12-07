@@ -1,5 +1,5 @@
+import { Todo } from 'src/todos/entities/todo.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Todo } from './todo.entity';
 
 @Entity()
 export class User {
@@ -13,4 +13,10 @@ export class User {
     eager: true,
   })
   todos: Todo[];
+
+  todosCount?: number;
+
+  todosOpenCount?: number;
+  todosInProgressCount?: number;
+  todosDoneCount?: number;
 }

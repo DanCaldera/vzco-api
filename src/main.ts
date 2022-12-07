@@ -5,15 +5,18 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    // logger: ['error', 'warn', 'debug'],
+    logger:
+      process.env.NODE_ENV !== 'production'
+        ? ['log', 'error', 'warn', 'debug', 'verbose']
+        : ['error', 'warn'],
   });
   app.setGlobalPrefix(`api/${process.env.API_VERSION}`);
   app.useGlobalPipes(new ValidationPipe());
   const config = new DocumentBuilder()
-    .setTitle('Todos API')
+    .setTitle('Todos-Waitlist-Saas API')
     .setDescription('The Todos API description')
-    .setVersion('1.0')
-    .addTag('todos')
+    .setVersion(process.env.npm_package_version)
+    .addTag('app')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);

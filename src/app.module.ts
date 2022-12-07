@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import ormConfig from './config/orm.config';
 import ormConfigProd from './config/orm.config.prod';
 import { TodosModule } from './todos/todos.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { TodosModule } from './todos/todos.module';
         process.env.NODE_ENV !== 'production' ? ormConfig : ormConfigProd,
     }),
     TodosModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
