@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -15,6 +17,8 @@ import { Todo } from './entities/todo.entity';
 
 @Controller('todos')
 export class TodosController {
+  private readonly logger = new Logger(TodosController.name);
+
   constructor(
     @InjectRepository(Todo)
     private readonly repository: Repository<Todo>,
@@ -27,25 +31,51 @@ export class TodosController {
 
   @Get()
   async findAll() {
-    return await this.repository.find();
+    this.logger.log('Hit the findAll endpoint');
+    const todos = await this.repository.find();
+    this.logger.debug(`Found ${todos.length} todos`);
+    return todos;
   }
 
   @Get(':id')
   async findOne(@Param('id') id: number) {
-    return await this.repository.findOne({
+    const todo = await this.repository.findOne({
       where: {
         id,
       },
     });
+
+    if (!todo) throw new NotFoundException();
+
+    return todo;
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() input: UpdateTodoDto) {
-    return await this.repository.update(id, input);
+  async update(@Param('id') id: number, @Body() input: UpdateTodoDto) {
+    const todo = await this.repository.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!todo) throw new NotFoundException();
+
+    return await this.repository.save({
+      ...todo,
+      ...input,
+    });
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    return await this.repository.delete(id);
+  async remove(@Param('id') id: number) {
+    const todo = await this.repository.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!todo) throw new NotFoundException();
+
+    await this.repository.remove(todo);
   }
 }

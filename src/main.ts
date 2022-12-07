@@ -4,8 +4,10 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix('api/v1');
+  const app = await NestFactory.create(AppModule, {
+    // logger: ['error', 'warn', 'debug'],
+  });
+  app.setGlobalPrefix(`api/${process.env.API_VERSION}`);
   app.useGlobalPipes(new ValidationPipe());
   const config = new DocumentBuilder()
     .setTitle('Todos API')
