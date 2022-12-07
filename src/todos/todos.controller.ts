@@ -39,8 +39,6 @@ export class TodosController {
   @Get()
   @UsePipes(new ValidationPipe({ transform: true }))
   async findAll(@Query() filter: ListTodosDto) {
-    console.log('filter', filter);
-
     this.logger.log('Hit the findAll endpoint');
     const todos = await this.todosService.getTodosFilteredPaginated(filter, {
       currentPage: filter.page,
@@ -80,14 +78,8 @@ export class TodosController {
 
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number) {
-    const todo = await this.repository.findOne({
-      where: {
-        id,
-      },
-    });
+    const result = await this.todosService.deleteTodoById(id);
 
-    if (!todo) throw new NotFoundException();
-
-    await this.repository.remove(todo);
+    if (!result.affected) throw new NotFoundException();
   }
 }

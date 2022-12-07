@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { paginate, PaginationOptions } from 'src/pagination/paginator';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { dueDateFilterEnum, ListTodosDto } from './dto/list.todos.dto';
 import { Todo } from './entities/todo.entity';
 
@@ -85,5 +85,14 @@ export class TodosService {
     this.logger.debug(query.getSql());
 
     return await query.getOne();
+  }
+
+  public async deleteTodoById(id: number): Promise<DeleteResult> {
+    return await this.todosRepository
+      .createQueryBuilder()
+      .delete()
+      .from(Todo)
+      .where('id = :id', { id })
+      .execute();
   }
 }
