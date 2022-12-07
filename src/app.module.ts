@@ -1,20 +1,22 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import ormConfig from './config/orm.config';
+import ormConfigProd from './config/orm.config.prod';
 import { TodosModule } from './todos/todos.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'containers-us-west-154.railway.app',
-      port: 6471,
-      username: 'root',
-      password: 'password',
-      database: 'railway',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [ormConfig],
+      expandVariables: true,
+    }),
+    TypeOrmModule.forRootAsync({
+      useFactory:
+        process.env.NODE_ENV === 'production' ? ormConfig : ormConfigProd,
     }),
     TodosModule,
   ],
