@@ -19,10 +19,7 @@ export class Todo {
   done: boolean;
 
   @ManyToOne(() => User, (user) => user.todos, {
-    nullable: false,
-  })
-  @JoinColumn({
-    name: 'user_id',
+    nullable: true,
   })
   user: User;
 }

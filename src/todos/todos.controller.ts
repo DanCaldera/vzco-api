@@ -8,12 +8,14 @@ import {
   Delete,
   Logger,
   NotFoundException,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 import { Todo } from './entities/todo.entity';
+import { TodosService } from './todos.service';
 
 @Controller('todos')
 export class TodosController {
@@ -22,6 +24,7 @@ export class TodosController {
   constructor(
     @InjectRepository(Todo)
     private readonly repository: Repository<Todo>,
+    private readonly todosService: TodosService,
   ) {}
 
   @Post()
@@ -38,12 +41,8 @@ export class TodosController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: number) {
-    const todo = await this.repository.findOne({
-      where: {
-        id,
-      },
-    });
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    const todo = await this.todosService.getTodo(id);
 
     if (!todo) throw new NotFoundException();
 
@@ -51,7 +50,10 @@ export class TodosController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: number, @Body() input: UpdateTodoDto) {
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() input: UpdateTodoDto,
+  ) {
     const todo = await this.repository.findOne({
       where: {
         id,
@@ -67,7 +69,7 @@ export class TodosController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: number) {
+  async remove(@Param('id', ParseIntPipe) id: number) {
     const todo = await this.repository.findOne({
       where: {
         id,
