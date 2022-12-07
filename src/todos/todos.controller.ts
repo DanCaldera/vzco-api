@@ -16,26 +16,19 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { AuthGuardJwt } from 'src/auth/auth-guard.jwt';
 import { CurrentUser } from 'src/auth/current-user.decorator';
 import { User } from 'src/auth/entities/user.entity';
-import { Repository } from 'typeorm';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { ListTodosDto } from './dto/list.todos.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
-import { Todo } from './entities/todo.entity';
 import { TodosService } from './todos.service';
 
 @Controller('todos')
 export class TodosController {
   private readonly logger = new Logger(TodosController.name);
 
-  constructor(
-    @InjectRepository(Todo)
-    private readonly repository: Repository<Todo>,
-    private readonly todosService: TodosService,
-  ) {}
+  constructor(private readonly todosService: TodosService) {}
 
   @Post()
   @UseGuards(AuthGuardJwt)
@@ -74,11 +67,7 @@ export class TodosController {
     @Body() UpdateTodoDto: UpdateTodoDto,
     @CurrentUser() user: User,
   ) {
-    const todo = await this.repository.findOne({
-      where: {
-        id,
-      },
-    });
+    const todo = await this.todosService.getTodo(id);
 
     if (!todo) throw new NotFoundException();
 
@@ -96,11 +85,7 @@ export class TodosController {
     @Param('id', ParseIntPipe) id: number,
     @CurrentUser() user: User,
   ) {
-    const todo = await this.repository.findOne({
-      where: {
-        id,
-      },
-    });
+    const todo = await this.todosService.getTodo(id);
 
     if (!todo) throw new NotFoundException();
 
