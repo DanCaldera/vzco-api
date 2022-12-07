@@ -47,30 +47,31 @@ export class TodosController {
     return await this.todosService.createTodo(CreateTodoDto, user);
   }
 
-  @Get()
-  @UsePipes(new ValidationPipe({ transform: true }))
-  @UseInterceptors(ClassSerializerInterceptor)
-  async findAll(@Query() filter: ListTodosDto) {
-    this.logger.log('Hit the findAll endpoint');
-    const todos = await this.todosService.getTodosFilteredPaginated(filter, {
-      currentPage: filter.page,
-      total: true,
-      limit: 10,
-    });
-    return todos;
-  }
+  // @Get()
+  // @UsePipes(new ValidationPipe({ transform: true }))
+  // @UseInterceptors(ClassSerializerInterceptor)
+  // async findAll(@Query() filter: ListTodosDto) {
+  //   this.logger.log('Hit the findAll endpoint');
+  //   const todos = await this.todosService.getTodosFilteredPaginated(filter, {
+  //     currentPage: filter.page,
+  //     total: true,
+  //     limit: 10,
+  //   });
+  //   return todos;
+  // }
 
-  @Get(':id')
-  @UseInterceptors(ClassSerializerInterceptor)
-  async findOne(@Param('id', ParseIntPipe) id: number) {
-    const todo = await this.todosService.getTodo(id);
+  // @Get(':id')
+  // @UseInterceptors(ClassSerializerInterceptor)
+  // async findOne(@Param('id', ParseIntPipe) id: number) {
+  //   const todo = await this.todosService.getTodo(id);
 
-    if (!todo) throw new NotFoundException();
+  //   if (!todo) throw new NotFoundException();
 
-    return todo;
-  }
+  //   return todo;
+  // }
 
   @Get('user/:id')
+  @UseGuards(AuthGuardJwt)
   @UseInterceptors(ClassSerializerInterceptor)
   async findUserTodos(
     @Param('id', ParseIntPipe) id: number,
