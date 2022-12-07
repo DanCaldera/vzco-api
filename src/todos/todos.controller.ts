@@ -16,15 +16,11 @@ import {
   SerializeOptions,
   UseGuards,
   UseInterceptors,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
-import { filter } from 'rxjs';
 import { AuthGuardJwt } from 'src/auth/auth-guard.jwt';
 import { CurrentUser } from 'src/auth/current-user.decorator';
 import { User } from 'src/auth/entities/user.entity';
 import { CreateTodoDto } from './dto/create-todo.dto';
-import { ListTodosDto } from './dto/list.todos.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 import { TodosService } from './todos.service';
 
