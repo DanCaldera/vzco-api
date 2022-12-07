@@ -1,3 +1,4 @@
+import { Expose } from 'class-transformer';
 import { User } from 'src/auth/entities/user.entity';
 import {
   Column,
@@ -20,15 +21,18 @@ export class Todo {
   }
 
   @PrimaryGeneratedColumn()
+  @Expose()
   id: number;
 
   @Column('varchar', { length: 100 })
+  @Expose()
   title: string;
 
   @Column('varchar', {
     length: 500,
     nullable: true,
   })
+  @Expose()
   description: string;
 
   @Column({
@@ -36,12 +40,14 @@ export class Todo {
     enum: TodoStatusEnum,
     default: TodoStatusEnum.OPEN,
   })
+  @Expose()
   status: TodoStatusEnum;
 
   @Column({
     type: 'date',
     nullable: true,
   })
+  @Expose()
   dueDate: Date;
 
   @ManyToOne(() => User, (user) => user.todos, {

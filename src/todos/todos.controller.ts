@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   ForbiddenException,
@@ -12,7 +13,9 @@ import {
   Patch,
   Post,
   Query,
+  SerializeOptions,
   UseGuards,
+  UseInterceptors,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -25,6 +28,9 @@ import { UpdateTodoDto } from './dto/update-todo.dto';
 import { TodosService } from './todos.service';
 
 @Controller('todos')
+@SerializeOptions({
+  strategy: 'excludeAll',
+})
 export class TodosController {
   private readonly logger = new Logger(TodosController.name);
 
@@ -32,6 +38,7 @@ export class TodosController {
 
   @Post()
   @UseGuards(AuthGuardJwt)
+  @UseInterceptors(ClassSerializerInterceptor)
   async create(
     @Body() CreateTodoDto: CreateTodoDto,
     @CurrentUser() user: User,
@@ -41,6 +48,7 @@ export class TodosController {
 
   @Get()
   @UsePipes(new ValidationPipe({ transform: true }))
+  @UseInterceptors(ClassSerializerInterceptor)
   async findAll(@Query() filter: ListTodosDto) {
     this.logger.log('Hit the findAll endpoint');
     const todos = await this.todosService.getTodosFilteredPaginated(filter, {
@@ -52,6 +60,7 @@ export class TodosController {
   }
 
   @Get(':id')
+  @UseInterceptors(ClassSerializerInterceptor)
   async findOne(@Param('id', ParseIntPipe) id: number) {
     const todo = await this.todosService.getTodo(id);
 
@@ -62,6 +71,7 @@ export class TodosController {
 
   @Patch(':id')
   @UseGuards(AuthGuardJwt)
+  @UseInterceptors(ClassSerializerInterceptor)
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() UpdateTodoDto: UpdateTodoDto,
