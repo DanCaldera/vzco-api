@@ -1,9 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/auth/entities/user.entity';
 import { paginate, PaginationOptions } from 'src/pagination/paginator';
 import { DeleteResult, Repository } from 'typeorm';
+import { CreateTodoDto } from './dto/create-todo.dto';
 import { dueDateFilterEnum, ListTodosDto } from './dto/list.todos.dto';
-import { Todo } from './entities/todo.entity';
+import { UpdateTodoDto } from './dto/update-todo.dto';
+import { Todo, TodoStatusEnum } from './entities/todo.entity';
 
 @Injectable()
 export class TodosService {
@@ -85,6 +88,32 @@ export class TodosService {
     this.logger.debug(query.getSql());
 
     return await query.getOne();
+  }
+
+  public async createTodo(
+    createTodoDto: CreateTodoDto,
+    user: User,
+  ): Promise<Todo> {
+    return await this.todosRepository.save({
+      ...createTodoDto,
+      user,
+      status: TodoStatusEnum.OPEN,
+    });
+  }
+
+  public async updateTodo(
+    todo: Todo,
+    updateTodoDto: UpdateTodoDto,
+  ): Promise<Todo> {
+    return await this.todosRepository.save(
+      new Todo({
+        ...todo,
+        ...updateTodoDto,
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        dueDate: updateTodoDto.dueDate || todo.dueDate,
+      }),
+    );
   }
 
   public async deleteTodoById(id: number): Promise<DeleteResult> {

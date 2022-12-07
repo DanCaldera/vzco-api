@@ -15,6 +15,10 @@ export enum TodoStatusEnum {
 
 @Entity()
 export class Todo {
+  constructor(partial?: Partial<Event>) {
+    Object.assign(this, partial);
+  }
+
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -45,4 +49,7 @@ export class Todo {
   })
   @JoinColumn({ name: 'userId' })
   user: User;
+
+  @Column()
+  userId: number;
 }

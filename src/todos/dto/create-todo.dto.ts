@@ -5,5 +5,7 @@ export class CreateTodoDto {
     message: 'El título debe tener entre 1 y 100 caracteres',
   })
   title: string;
-  done: boolean;
+  description: string;
+  status: string;
+  dueDate: string;
 }

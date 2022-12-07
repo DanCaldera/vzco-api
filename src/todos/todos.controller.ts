@@ -2,7 +2,9 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
+  HttpCode,
   Logger,
   NotFoundException,
   Param,
@@ -10,10 +12,14 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { AuthGuardJwt } from 'src/auth/auth-guard.jwt';
+import { CurrentUser } from 'src/auth/current-user.decorator';
+import { User } from 'src/auth/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { ListTodosDto } from './dto/list.todos.dto';
@@ -32,8 +38,12 @@ export class TodosController {
   ) {}
 
   @Post()
-  async create(@Body() CreateTodoDto: CreateTodoDto) {
-    return await this.repository.save(CreateTodoDto);
+  @UseGuards(AuthGuardJwt)
+  async create(
+    @Body() CreateTodoDto: CreateTodoDto,
+    @CurrentUser() user: User,
+  ) {
+    return await this.todosService.createTodo(CreateTodoDto, user);
   }
 
   @Get()
@@ -58,9 +68,11 @@ export class TodosController {
   }
 
   @Patch(':id')
+  @UseGuards(AuthGuardJwt)
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() UpdateTodoDto: UpdateTodoDto,
+    @CurrentUser() user: User,
   ) {
     const todo = await this.repository.findOne({
       where: {
@@ -70,14 +82,20 @@ export class TodosController {
 
     if (!todo) throw new NotFoundException();
 
-    return await this.repository.save({
-      ...todo,
-      ...UpdateTodoDto,
-    });
+    if (todo.userId !== user.id) {
+      throw new ForbiddenException(null, 'You are not the owner of this todo');
+    }
+
+    return this.todosService.updateTodo(todo, UpdateTodoDto);
   }
 
   @Delete(':id')
-  async remove(@Param('id', ParseIntPipe) id: number) {
+  @UseGuards(AuthGuardJwt)
+  @HttpCode(204)
+  async remove(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: User,
+  ) {
     const result = await this.todosService.deleteTodoById(id);
 
     if (!result.affected) throw new NotFoundException();
