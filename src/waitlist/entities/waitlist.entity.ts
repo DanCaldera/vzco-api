@@ -1,0 +1,20 @@
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+
+@Entity()
+export class Waitlist {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column('varchar', {
+    length: 255,
+    nullable: false,
+    unique: true,
+  })
+  email: string;
+
+  @Column('timestamp', {
+    nullable: false,
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  createdAt: Date;
+}
