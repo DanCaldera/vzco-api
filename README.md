@@ -72,3 +72,12 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 
 Nest is [MIT licensed](LICENSE).
 # vzco-api
+
+## Todo List
+
+- [x] Waitlist
+- [ ] LogIn
+- [ ] Forgot Password
+- [ ] SignUp
+- [ ] Basic Todo for Main App
+- [ ] Saas Subscriptions with Stripe
