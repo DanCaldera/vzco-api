@@ -12,6 +12,12 @@ export class Waitlist {
   })
   email: string;
 
+  @Column('boolean', {
+    nullable: false,
+    default: false,
+  })
+  signInEnabled: boolean;
+
   @Column('timestamp', {
     nullable: false,
     default: () => 'CURRENT_TIMESTAMP',
