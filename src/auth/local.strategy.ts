@@ -20,10 +20,15 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       where: [{ username }, { email: username }],
     });
 
-    if (!user) throw new UnauthorizedException();
+    if (!user)
+      throw new UnauthorizedException(
+        'This account does not exist or your password is incorrect',
+      );
 
     if (!(await bcrypt.compare(password, user.password)))
-      throw new UnauthorizedException();
+      throw new UnauthorizedException(
+        'This account does not exist or your password is incorrect',
+      );
 
     return user;
   }
