@@ -10,6 +10,7 @@ import {
 import { WaitlistService } from './waitlist.service';
 import { CreateWaitlistDto } from './dto/create-waitlist.dto';
 import { UpdateWaitlistDto } from './dto/update-waitlist.dto';
+import { VerifyEmailWaitlistDto } from './dto/verify-email-waitlist.dto';
 
 @Controller('waitlist')
 export class WaitlistController {
@@ -20,26 +21,33 @@ export class WaitlistController {
     return this.waitlistService.create(createWaitlistDto);
   }
 
-  @Get()
-  async findAll() {
-    return this.waitlistService.findAll();
+  // @Get()
+  // async findAll() {
+  //   return this.waitlistService.findAll();
+  // }
+
+  // @Get(':id')
+  // async findOne(@Param('id') id: string) {
+  //   return this.waitlistService.findOne(+id);
+  // }
+
+  @Post('/verify')
+  async verifyEmail(@Body() verifyEmailWaitlistDto: VerifyEmailWaitlistDto) {
+    return this.waitlistService.verifyEmailIsAbleToSignup(
+      verifyEmailWaitlistDto,
+    );
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return this.waitlistService.findOne(+id);
-  }
+  // @Patch(':id')
+  // async update(
+  //   @Param('id') id: string,
+  //   @Body() updateWaitlistDto: UpdateWaitlistDto,
+  // ) {
+  //   return this.waitlistService.update(+id, updateWaitlistDto);
+  // }
 
-  @Patch(':id')
-  async update(
-    @Param('id') id: string,
-    @Body() updateWaitlistDto: UpdateWaitlistDto,
-  ) {
-    return this.waitlistService.update(+id, updateWaitlistDto);
-  }
-
-  @Delete(':id')
-  async remove(@Param('id') id: string) {
-    return this.waitlistService.remove(+id);
-  }
+  // @Delete(':id')
+  // async remove(@Param('id') id: string) {
+  //   return this.waitlistService.remove(+id);
+  // }
 }

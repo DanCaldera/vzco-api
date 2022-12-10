@@ -9,13 +9,21 @@ import {
 } from 'typeorm';
 import { UserDetails } from './user.details.entity';
 
+export enum UserRoleEnum {
+  ADMIN = 'ADMIN',
+  USER = 'USER',
+}
+
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
   @Expose()
   id: number;
 
-  @Column()
+  @Column({
+    length: 100,
+    nullable: true,
+  })
   @Expose()
   name: string;
 
@@ -33,6 +41,21 @@ export class User {
   })
   @Expose()
   email: string;
+
+  @Column({
+    default: false,
+  })
+  @Expose()
+  isEmailVerified: boolean;
+
+  @Column({
+    type: 'enum',
+    enum: UserRoleEnum,
+    default: UserRoleEnum.USER,
+    nullable: false,
+  })
+  @Expose()
+  role: string;
 
   @OneToMany(() => Todo, (todo) => todo.user, {
     eager: true,

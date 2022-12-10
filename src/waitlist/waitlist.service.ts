@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateWaitlistDto } from './dto/create-waitlist.dto';
 import { UpdateWaitlistDto } from './dto/update-waitlist.dto';
+import { VerifyEmailWaitlistDto } from './dto/verify-email-waitlist.dto';
 import { Waitlist } from './entities/waitlist.entity';
 
 @Injectable()
@@ -32,6 +33,23 @@ export class WaitlistService {
     }
 
     return waitlist;
+  }
+
+  async verifyEmailIsAbleToSignup(
+    verifyEmailWaitlistDto: VerifyEmailWaitlistDto,
+  ) {
+    const waitlist = await this.waitlistRepository.findOne({
+      where: {
+        email: verifyEmailWaitlistDto.email,
+        signUpEnabled: true,
+      },
+    });
+
+    if (waitlist) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   async update(id: number, updateWaitlistDto: UpdateWaitlistDto) {

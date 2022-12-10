@@ -27,7 +27,7 @@ export class UsersController {
     if (existingUser) throw new BadRequestException('User already exists');
     user.name = createUserDto.name;
     user.username = createUserDto.username;
-    user.email = createUserDto.email;
+    user.email = createUserDto.email?.toLowerCase();
     user.password = await this.authService.hashPassword(createUserDto.password);
     return {
       ...(await this.usersRepository.save(user)),

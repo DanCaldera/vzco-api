@@ -16,7 +16,7 @@ export class Waitlist {
     nullable: false,
     default: false,
   })
-  signInEnabled: boolean;
+  signUpEnabled: boolean;
 
   @Column('timestamp', {
     nullable: false,

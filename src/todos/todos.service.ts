@@ -4,7 +4,7 @@ import { User } from 'src/auth/entities/user.entity';
 import {
   paginate,
   PaginationOptions,
-  PaginationResult,
+  // PaginationResult,
 } from 'src/pagination/paginator';
 import { DeleteResult, Repository } from 'typeorm';
 import { CreateTodoDto } from './dto/create-todo.dto';
