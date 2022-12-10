@@ -15,13 +15,9 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     super();
   }
 
-  private readonly logger = new Logger(LocalStrategy.name);
-
   async validate(username: string, password: string): Promise<any> {
     const user = await this.userRepository.findOne({
-      where: {
-        username,
-      },
+      where: [{ username }, { email: username }],
     });
 
     if (!user) throw new UnauthorizedException();
