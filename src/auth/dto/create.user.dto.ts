@@ -8,14 +8,10 @@ export class CreateUserDto {
   })
   username: string;
   @Length(8)
-  // Password must contain at least 8 characters and one number, password can contain spaces and special characters
-  @Matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, {
+  @Matches(/^(?=.*[a-zA-Z])(?=.*[0-9])/, {
     message: 'Password must contain at least 8 characters and one number',
   })
   password: string;
-  // retypePassword is not a database column, it is used to compare with password
-  @Length(8)
-  retypePassword: string;
   @IsEmail()
   email: string;
 }
