@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { UserDetails } from './user.details.entity';
+import { randomBytes } from 'crypto';
 
 export enum UserRoleEnum {
   ADMIN = 'ADMIN',
@@ -56,6 +57,12 @@ export class User {
   })
   @Expose()
   role: string;
+
+  @Column({
+    nullable: false,
+    default: randomBytes(100).toString('hex'),
+  })
+  emailVerificationToken: string;
 
   @OneToMany(() => Todo, (todo) => todo.user, {
     eager: true,

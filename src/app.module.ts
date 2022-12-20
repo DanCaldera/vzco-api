@@ -8,6 +8,7 @@ import ormConfigProd from './config/orm.config.prod';
 import { TodosModule } from './todos/todos.module';
 import { AuthModule } from './auth/auth.module';
 import { WaitlistModule } from './waitlist/waitlist.module';
+import { MaileModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { WaitlistModule } from './waitlist/waitlist.module';
     TodosModule,
     AuthModule,
     WaitlistModule,
+    MaileModule,
   ],
   controllers: [AppController],
   providers: [AppService],

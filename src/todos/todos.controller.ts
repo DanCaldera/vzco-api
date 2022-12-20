@@ -16,11 +16,14 @@ import {
   SerializeOptions,
   UseGuards,
   UseInterceptors,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuardJwt } from 'src/auth/auth-guard.jwt';
 import { CurrentUser } from 'src/auth/current-user.decorator';
 import { User } from 'src/auth/entities/user.entity';
 import { CreateTodoDto } from './dto/create-todo.dto';
+import { ListTodosDto } from './dto/list.todos.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 import { TodosService } from './todos.service';
 
@@ -43,18 +46,18 @@ export class TodosController {
     return await this.todosService.createTodo(CreateTodoDto, user);
   }
 
-  // @Get()
-  // @UsePipes(new ValidationPipe({ transform: true }))
-  // @UseInterceptors(ClassSerializerInterceptor)
-  // async findAll(@Query() filter: ListTodosDto) {
-  //   this.logger.log('Hit the findAll endpoint');
-  //   const todos = await this.todosService.getTodosFilteredPaginated(filter, {
-  //     currentPage: filter.page,
-  //     total: true,
-  //     limit: 10,
-  //   });
-  //   return todos;
-  // }
+  @Get()
+  @UsePipes(new ValidationPipe({ transform: true }))
+  @UseInterceptors(ClassSerializerInterceptor)
+  async findAll(@Query() filter: ListTodosDto) {
+    this.logger.log('Hit the findAll endpoint');
+    const todos = await this.todosService.getTodosFilteredPaginated(filter, {
+      currentPage: filter.page,
+      total: true,
+      limit: 2,
+    });
+    return todos;
+  }
 
   // @Get(':id')
   // @UseInterceptors(ClassSerializerInterceptor)
