@@ -76,8 +76,8 @@ Nest is [MIT licensed](LICENSE).
 ## Todo List
 
 - [x] Waitlist
-- [ ] LogIn
-- [ ] Forgot Password
-- [ ] SignUp
+- [x] LogIn
+- [x] Forgot Password
+- [x] SignUp
 - [ ] Basic Todo for Main App
 - [ ] Saas Subscriptions with Stripe

@@ -16,7 +16,7 @@ export class EmailService {
       subject: 'Forgot password',
       template: 'forgot-password',
       context: {
-        link: `${process.env.APP_URL}/email/forgot-password?token=${user.emailVerificationToken}&email=${user.email}`,
+        link: `${process.env.APP_URL}/auth/change-password?token=${user.emailVerificationToken}&email=${user.email}`,
       },
     });
   }
