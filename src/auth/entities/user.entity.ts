@@ -55,7 +55,6 @@ export class User {
     default: UserRoleEnum.USER,
     nullable: false,
   })
-  @Expose()
   role: string;
 
   @Column({
@@ -67,13 +66,9 @@ export class User {
   @OneToMany(() => Todo, (todo) => todo.user, {
     eager: true,
   })
-  @Expose()
   todos: Todo[];
 
-  @OneToOne(() => UserDetails, (userDetails) => userDetails.user, {
-    eager: true,
-  })
-  @Expose()
+  @OneToOne(() => UserDetails, (userDetails) => userDetails.user)
   details: UserDetails;
 
   @Expose()
